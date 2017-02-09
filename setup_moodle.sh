@@ -102,3 +102,5 @@ sed -i "s/;opcache.max_accelerated_files.*/opcache.max_accelerated_files = 8000/
 
 # restart Apache
 sudo service apache2 restart 
+# For php in web apps
+sudo a2dismod php5.6 && sudo a2enmod php7.0 && sudo service apache2 restart

@@ -27,11 +27,16 @@ glusterVolume=$2
 
 # install pre-requisites
 sudo apt-get -y install python-software-properties
-
+sudo apt-get install -y language-pack-en-base
+sudo LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php -y
+sudo apt-get -y update
 #configure gluster repository & install gluster client
 sudo add-apt-repository ppa:gluster/glusterfs-3.7 -y
 sudo apt-get -y update
 sudo apt-get -y --force-yes install glusterfs-client mysql-client git 
+
+# install the LAMP stack
+sudo apt-get -y install apache2 
 
 #install php7
 sudo add-apt-repository ppa:ondrej/php -y
@@ -39,11 +44,8 @@ sudo apt-get -y update
 sudo apt-get -y install php7.0
 sudo apt-get -y install php7.0-mysql
 sudo apt-get -y install graphviz aspell php7.0-pspell php7.0-curl php7.0-gd php7.0-intl php7.0-mysql php7.0-xml php7.0-xmlrpc php7.0-ldap php7.0-zip php7.0-soap php7.0-mbstring
-
-# install the LAMP stack
-sudo apt-get -y install apache2 
-
-
+# restart Apache
+sudo service apache2 restart 
 
 # create gluster mount point
 sudo mkdir -p /moodle
@@ -63,7 +65,7 @@ sudo sed -i 's/\/var\/www/\/\moodle/g' /etc/apache2/apache2.conf
 sudo echo ServerName \"localhost\"  >> /etc/apache2/apache2.conf
 
 #enable ssl 
-sudo a2enmod rewrite ssl
+#sudo a2enmod rewrite ssl
 
 #update virtual site configuration 
 echo -e '
@@ -100,7 +102,5 @@ sed -i "s/;opcache.enable = 0/opcache.enable = 1/" $PhpIni
 sed -i "s/;opcache.memory_consumption.*/opcache.memory_consumption = 256/" $PhpIni
 sed -i "s/;opcache.max_accelerated_files.*/opcache.max_accelerated_files = 8000/" $PhpIni
 
-# restart Apache
-sudo service apache2 restart 
 # For php in web apps
-sudo a2dismod php5.6 && sudo a2enmod php7.0 && sudo service apache2 restart
+sudo a2enmod php7.0 && sudo service apache2 restart
